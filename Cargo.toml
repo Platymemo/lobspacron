@@ -1,0 +1,14 @@
+[package]
+name = "crossingnumber-rs"
+version = "0.1.0"
+authors = ["Edward Hazelton <edwardhazelton+crossingnumber@gmail.com>"]
+edition = "2021"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+itertools = "0.10.5"
+once_cell = "1.17.1"
+reqwest = { version = "0.12.8", features = ["blocking"] }
+serde = "1.0.160"
+serde_json = "1.0.96"
