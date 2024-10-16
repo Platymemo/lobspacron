@@ -42,6 +42,9 @@ type Word = Vec<Letter>;
 const M: usize = 9;
 const N: usize = 9;
 
+const CLIENT: Lazy<HazelcastRestClient> =
+    Lazy::new(|| HazelcastRestClient::new("127.0.0.1", "5701"));
+
 // Lexicographically smallest letter
 const BASE: Letter = [0, 1, 2, 3, 4, 5, 6, 7, 8];
 
@@ -388,8 +391,6 @@ fn main() {
     let args: Vec<String> = std::env::args().collect();
     let host = args.iter().any(|arg| arg == "host");
 
-    let client = HazelcastRestClient::new("127.0.0.1", "5701");
-
     if host {
         // We generate entries iteratively, starting from 012345678, adding Letters as they fit, splitting off where we need to.
         let base_word = vec![BASE];
@@ -405,12 +406,12 @@ fn main() {
                     temp.push(letter);
                     temp
                 };
-                let _ = client.queue_offer("to_check", new_word.to_string());
+                let _ = CLIENT.queue_offer("to_check", new_word.to_string());
             }
         }
     } else {
         loop {
-            let res = client.queue_delete("to_check", 10);
+            let res = CLIENT.queue_delete("to_check", 3);
             match res {
                 Ok(to_check) => {
                     let word = to_check.to_word();
